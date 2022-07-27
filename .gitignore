@@ -1,0 +1,6 @@
+checkpoints
+imagenet
+__pycache__
+*pyc
+todo.txt
+*ipynb

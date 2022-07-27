@@ -1,10 +1,9 @@
 # MoCoViT: Mobile Convolutional Vision Transformer
 ### Work in Progress!
 
-
 <table>
-<tr><td colspan="2"><img src="https://d3i71xaburhd42.cloudfront.net/59e648aec20bd6c9db5f2214e9a3db20d2a1ae0f/5-Figure2-1.png" width="600"></td></tr>
-<tr><td style="text-align:center">ViT</td><td style="text-align:center">MoCoViT</td></tr>
+<tr><td colspan="2"><img src="./figures/figure2.png" width="750"></td></tr>
+<tr><td><b>ViT</b></td><td><b>MoCoViT</b></td></tr>
 </table>
 
 ## Introduction
@@ -15,14 +14,15 @@ MoCoViT is heavily based off "GhostNet: More Features from Cheap Operations" by 
 In its current state, the output of MoCoViT is predictions on 1000 classes for use with ImageNet.
 
 ## Installation
-Lorem ipsum
-
-## Training
-Lorem ipsum
+This repo uses [ghostnet.pytorch](https://github.com/iamhankai/ghostnet.pytorch) as a git submodule, so cloning must be done recursively:
+```
+git clone --recursive https://github.com/smitheric95/MoCoViT-PyTorch.git
+```
 
 ## Coming Soon
 - Better training scripts.
-- Model checkpoints.
+- Inference/testing scripts.
+- Pre-trained model checkpoints.
 
 
 ## Citation

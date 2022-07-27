@@ -1,0 +1,3 @@
+[submodule "ghostnet.pytorch"]
+	path = ghostnet.pytorch
+	url = https://github.com/iamhankai/ghostnet.pytorch
