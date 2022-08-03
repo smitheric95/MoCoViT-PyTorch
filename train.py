@@ -6,6 +6,7 @@ and should be placed in ./imagenet.
 Based loosely on https://github.com/pytorch/examples/blob/main/imagenet/main.py
 """
 import argparse
+from distutils.util import strtobool
 import torch
 import torchvision
 import torchvision.transforms as transforms
@@ -37,11 +38,12 @@ if __name__ == '__main__':
     parser.add_argument('--imagenet_path', type=str, default='./imagenet', help="Path to ImageNet-1k directory containing 'train' and 'val' folders.")
     parser.add_argument('--gpu', type=int, default=0, help='GPU to use for training.')
     parser.add_argument('--epochs', type=int, default=20, help='Number of epochs for which to train.')
-    parser.add_argument('--validate', choices=('True', 'False'), default=True, help='If True, run validation after each epoch.')
+    parser.add_argument('--validate', choices=('True', 'False'), default='True', help='If True, run validation after each epoch.')
     parser.add_argument('--train_batch', type=int, default=128, help='Batch size to use for training.')
     parser.add_argument('--val_batch', type=int, default=1024, help='Batch size to use for validation.')
     parser.add_argument('--num_workers', type=int, default=4, help='Number of workers to use while loading dataset splits.')
     args = parser.parse_args()
+    args.validate = strtobool(args.validate)
 
     device = torch.device('cuda:%d' % args.gpu if torch.cuda.is_available() else 'cpu')
 
@@ -51,6 +53,7 @@ if __name__ == '__main__':
 
     train_transform = transforms.Compose([
         transforms.RandomResizedCrop(224),
+        transforms.RandomHorizontalFlip(),
         transforms.ToTensor(),
         normalize
     ])
@@ -91,7 +94,7 @@ if __name__ == '__main__':
 
             running_loss += loss.item()
             if i % 500 == 0:
-                print(f'[{epoch + 1}, {i + 1:5d}] loss: {running_loss / 2000:.3f}')
+                print(f'[{epoch + 1}, {i + 1:5d}] loss: {running_loss / 2000:.6f}')
                 running_loss = 0.0
         
         # save checkpoint
@@ -104,7 +107,7 @@ if __name__ == '__main__':
             all_outputs = torch.empty((len(val_dataset), 1000))
             all_labels = torch.empty(len(val_dataset))
 
-            print('Validating...')
+            print('\nValidating...')
             with torch.no_grad():
                 for i, data in enumerate(val_loader):
                     inputs, labels = data[0].to(device), data[1].to(device)
@@ -116,6 +119,6 @@ if __name__ == '__main__':
                     all_labels[offset:(offset)+num_labels] = labels
 
             acc1, acc5 = accuracy(all_outputs, all_labels, topk=(1, 5))
-            print("Overall  Acc@1: %.5f, Acc@5: %.5f" % (acc1, acc5))
+            print("Overall  Acc@1: %.5f, Acc@5: %.5f\n" % (acc1, acc5))
 
-    print('Finished Training.')
+    print('\nFinished Training.')

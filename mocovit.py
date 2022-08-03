@@ -110,7 +110,7 @@ class MoCoViT(nn.Module):
 
         Args:
             input_channel (int, optional): Number of input channels. Defaults to 160.
-            exp_size (int, optional): Exapnsion size. Defaults to 960.
+            exp_size (int, optional): Expansion size. Defaults to 960.
             num_blocks (int, optional): Number of MoTBlocks. Defaults to 4.
             width_mult (int, optional): Width multiplier. Defaults to 1.
         """
