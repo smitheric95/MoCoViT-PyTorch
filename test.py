@@ -1,4 +1,4 @@
-"""Script to train MoCoViT on ImageNet.
+"""Script to test MoCoViT against ImageNet.
 
 Test .tar files can be downloaded from https://image-net.org
 and should be placed in ./imagenet.

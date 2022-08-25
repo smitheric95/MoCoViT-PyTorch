@@ -21,7 +21,7 @@ git clone --recursive https://github.com/smitheric95/MoCoViT-PyTorch.git
 
 ## Coming Soon
 - Better training scripts.
-- Inference/testing scripts.
+- Inference scripts.
 - Pre-trained model checkpoints.
 
 
