@@ -17,20 +17,21 @@ spec.loader.exec_module(ghost_net)
 
 class MoSA(nn.Module):
     """Mobile Self-Attention Module"""
-    def __init__(self, inp: int):
+    def __init__(self, inp: int, oup: int):
         """Initialize a MoSA module.
 
         Args:
             inp (int): Input channel size.
+            oup (int): Output channel size.
         """
         super(MoSA, self).__init__()
         self.dim_head = 64
         self.scale = self.dim_head ** -0.5
         self.attend = nn.Softmax(dim = -1)
         self.dw_conv = ghost_net.depthwise_conv(inp, inp)
-        self.ghost_module = ghost_net.GhostModule(inp, inp)
+        self.ghost_module = ghost_net.GhostModule(inp, oup)
 
-    def forward(self, v: torch.Tensor):
+    def forward(self, v: torch.Tensor) -> torch.Tensor:
         """Calculate mobile self-attention. See Equation 3.
 
         Args:
@@ -48,7 +49,7 @@ class MoSA(nn.Module):
 class MoFFN(nn.Module):
     """Mobile Feed Forward Network"""
     def __init__(self, inp: int, hidden_dim: int, oup: int):
-        """Initialize a MoFNN module.
+        """Initialize a MoFFN module.
 
         Args:
             inp (int): Input channel size.
@@ -62,7 +63,7 @@ class MoFFN(nn.Module):
             ghost_net.GhostModule(hidden_dim, oup),
         )
 
-    def forward(self, x: torch.Tensor):
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
         """Forward pass of MoFFN.
 
         Args:
@@ -85,10 +86,10 @@ class MoTBlock(nn.Module):
             oup (int): Output channel size.
         """
         super(MoTBlock, self).__init__()
-        self.mosa = MoSA(inp)
+        self.mosa = MoSA(inp, oup)
         self.moffn = MoFFN(inp, hidden_dim, oup)
 
-    def forward(self, x: torch.Tensor):
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
         """Forward pass of MoTBlock.
 
         Args:
@@ -134,7 +135,7 @@ class MoCoViT(nn.Module):
         self.classifier = self._ghost_net.classifier
 
 
-    def forward(self, x: torch.Tensor):
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
         """Forward pass of MoCoViT.
 
         Args:
