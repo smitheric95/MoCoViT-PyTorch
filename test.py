@@ -32,18 +32,18 @@ class TestDataset(Dataset):
 
     def __getitem__(self, idx):
         img_path = os.path.join(self.img_dir, self.imgs[idx])
-        print(img_path)
         img = Image.open(img_path).convert('RGB')
         tensor_img = self.transforms(img)
 
-        return tensor_img
+        return tensor_img, img_path
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Test a MoCoViT model against an ImageNet-1k dataset.')
     parser.add_argument('--imagenet_path', type=str, default='./imagenet', help="Path to ImageNet-1k directory containing 'test' folder.")
     parser.add_argument('--gpu', type=int, default=0, help='GPU to use for testing.')
-    parser.add_argument('--epoch', type=int, default=20, help='Epoch of model to use for testing.')
+    parser.add_argument('--epoch', type=int, default=-1, help='Epoch of model to use for testing.')
     parser.add_argument('--num_workers', type=int, default=4, help='Number of workers to use while loading dataset splits.')
+    parser.add_argument('--verbose', choices=('True', 'False'), default='False', help='If True, print prediction information.')
     args = parser.parse_args()
 
     device = torch.device('cuda:%d' % args.gpu if torch.cuda.is_available() else 'cpu')
@@ -53,7 +53,7 @@ if __name__ == '__main__':
     num_imgs = len(test_dataset)
 
     # load model
-    checkpoint_name = 'epoch%s.pt' % args.epoch
+    checkpoint_name = 'epoch%s.pt' % args.epoch if args.epoch >= 0 else 'default.pt'
     model = MoCoViT()
     model.load_state_dict(torch.load(os.path.join('./checkpoints', checkpoint_name)))
     print('Loaded model checkpoint %s.' % checkpoint_name)
@@ -66,14 +66,17 @@ if __name__ == '__main__':
     output_file = open('output_epoch%s.txt' % args.epoch,'w')
     for i, data in enumerate(test_loader):
         # load image batch
-        inputs = data.to(device)
+        inputs = data[0].to(device)
 
         # forward pass
         with torch.no_grad():
             result = model(inputs)
         
         results = " ".join([str(r.item()) for r in torch.topk(result.flatten(), 5).indices])
-        print([mapping[r.item()] for r in torch.topk(result.flatten(), 5).indices])
+        if args.verbose:
+            preds = [mapping[r.item()] for r in torch.topk(result.flatten(), 5).indices]
+            print(data[1][0] + ": " + str(preds))
+
         output_file.writelines(results + "\n")
 
         if i % (num_imgs * 0.01) == 0:
