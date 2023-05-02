@@ -1,5 +1,4 @@
 # MoCoViT: Mobile Convolutional Vision Transformer
-### Work in Progress!
 
 <table>
 <tr><td colspan="2"><img src="./figures/figure2.png" width="750"></td></tr>
@@ -19,11 +18,58 @@ This repo uses [ghostnet.pytorch](https://github.com/iamhankai/ghostnet.pytorch)
 git clone --recursive https://github.com/smitheric95/MoCoViT-PyTorch.git
 ```
 
-## Coming Soon
-- Better training scripts.
-- Inference scripts.
-- Pre-trained model checkpoints.
+### Requirements
+```
+PyTorch 1.0+
+Torchvision
+Argparse
+Pillow
+```
 
+## Usage
+This repo comes with training and testing scripts for use witht he ImageNet-1k dataset. Running these scripts requires dowloading the [ILSVRC2012](https://image-net.org/challenges/LSVRC/2012/2012-downloads.php) image sets. Instructions for running both scripts are below.
+
+### Training
+```
+usage: train.py [-h] [--imagenet_path IMAGENET_PATH] [--gpu GPU] [--epochs EPOCHS] [--validate {True,False}]
+                [--train_batch TRAIN_BATCH] [--val_batch VAL_BATCH] [--num_workers NUM_WORKERS]
+
+Train a MoCoViT model on an ImageNet-1k dataset.
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --imagenet_path IMAGENET_PATH
+                        Path to ImageNet-1k directory containing 'train' and 'val' folders. Default './imagenet'.
+  --gpu GPU             GPU to use for training. Default 0.
+  --epochs EPOCHS       Number of epochs for which to train. Default 20.
+  --validate {True,False}
+                        If True, run validation after each epoch. Default True.
+  --train_batch TRAIN_BATCH
+                        Batch size to use for training. Default 128.
+  --val_batch VAL_BATCH
+                        Batch size to use for validation. Default 1024.
+  --num_workers NUM_WORKERS
+                        Number of workers to use while loading dataset splits. Default 4.
+```
+
+### Testing
+```
+usage: test.py [-h] [--imagenet_path IMAGENET_PATH] [--gpu GPU] [--epoch EPOCH] [--num_workers NUM_WORKERS]
+               [--verbose {True,False}]
+
+Test a MoCoViT model against an ImageNet-1k dataset.
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --imagenet_path IMAGENET_PATH
+                        Path to ImageNet-1k directory containing 'test' folder. Default './imagenet'.
+  --gpu GPU             GPU to use for testing. Default 0.
+  --epoch EPOCH         Epoch of model to use for testing. Default './checkpoints/default.pt'
+  --num_workers NUM_WORKERS
+                        Number of workers to use while loading dataset splits. Default 4.
+  --verbose {True,False}
+                        If True, print prediction information. Default False.
+```
 
 ## Citation
 ```

@@ -16,7 +16,7 @@ from mocovit import MoCoViT
 def accuracy(output, target, topk=(1,)):
     """
     Computes the accuracy over the k top predictions for the specified values of k
-    
+
     Source: https://github.com/pytorch/examples/blob/main/imagenet/main.py#L464
     """
     with torch.no_grad():
@@ -35,13 +35,13 @@ def accuracy(output, target, topk=(1,)):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Train a MoCoViT model on an ImageNet-1k dataset.')
-    parser.add_argument('--imagenet_path', type=str, default='./imagenet', help="Path to ImageNet-1k directory containing 'train' and 'val' folders.")
-    parser.add_argument('--gpu', type=int, default=0, help='GPU to use for training.')
-    parser.add_argument('--epochs', type=int, default=20, help='Number of epochs for which to train.')
-    parser.add_argument('--validate', choices=('True', 'False'), default='True', help='If True, run validation after each epoch.')
-    parser.add_argument('--train_batch', type=int, default=128, help='Batch size to use for training.')
-    parser.add_argument('--val_batch', type=int, default=1024, help='Batch size to use for validation.')
-    parser.add_argument('--num_workers', type=int, default=4, help='Number of workers to use while loading dataset splits.')
+    parser.add_argument('--imagenet_path', type=str, default='./imagenet', help="Path to ImageNet-1k directory containing 'train' and 'val' folders. Default './imagenet'.")
+    parser.add_argument('--gpu', type=int, default=0, help='GPU to use for training. Default 0.')
+    parser.add_argument('--epochs', type=int, default=20, help='Number of epochs for which to train. Default 20.')
+    parser.add_argument('--validate', choices=('True', 'False'), default='True', help='If True, run validation after each epoch. Default True.')
+    parser.add_argument('--train_batch', type=int, default=128, help='Batch size to use for training. Default 128.')
+    parser.add_argument('--val_batch', type=int, default=1024, help='Batch size to use for validation. Default 1024.')
+    parser.add_argument('--num_workers', type=int, default=4, help='Number of workers to use while loading dataset splits. Default 4.')
     args = parser.parse_args()
     args.validate = strtobool(args.validate)
 
@@ -96,10 +96,10 @@ if __name__ == '__main__':
             if i % 500 == 0:
                 print(f'[{epoch + 1}, {i + 1:5d}] loss: {running_loss / 2000:.6f}')
                 running_loss = 0.0
-        
+
         # save checkpoint
         torch.save(model.state_dict(), './checkpoints/epoch%s.pt' % (epoch))
-        
+
         # validate
         if args.validate:
             model.eval()

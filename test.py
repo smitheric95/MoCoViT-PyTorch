@@ -5,6 +5,7 @@ and should be placed in ./imagenet.
 """
 import os
 import argparse
+from distutils.util import strtobool
 from PIL import Image
 import torch
 import torchvision.transforms as transforms
@@ -39,12 +40,13 @@ class TestDataset(Dataset):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Test a MoCoViT model against an ImageNet-1k dataset.')
-    parser.add_argument('--imagenet_path', type=str, default='./imagenet', help="Path to ImageNet-1k directory containing 'test' folder.")
-    parser.add_argument('--gpu', type=int, default=0, help='GPU to use for testing.')
-    parser.add_argument('--epoch', type=int, default=-1, help='Epoch of model to use for testing.')
-    parser.add_argument('--num_workers', type=int, default=4, help='Number of workers to use while loading dataset splits.')
-    parser.add_argument('--verbose', choices=('True', 'False'), default='False', help='If True, print prediction information.')
+    parser.add_argument('--imagenet_path', type=str, default='./imagenet', help="Path to ImageNet-1k directory containing 'test' folder. Default './imagenet'.")
+    parser.add_argument('--gpu', type=int, default=0, help='GPU to use for testing. Default 0.')
+    parser.add_argument('--epoch', type=int, default=-1, help="Epoch of model to use for testing. Default './checkpoints/default.pt'")
+    parser.add_argument('--num_workers', type=int, default=4, help='Number of workers to use while loading dataset splits. Default 4.')
+    parser.add_argument('--verbose', choices=('True', 'False'), default='False', help='If True, print prediction information. Default False.')
     args = parser.parse_args()
+    args.verbose = strtobool(args.verbose)
 
     device = torch.device('cuda:%d' % args.gpu if torch.cuda.is_available() else 'cpu')
 
